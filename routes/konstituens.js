@@ -5,7 +5,6 @@ const models = require('../models');
 // middlewares for check jsonwbtoken
 const { checkAuth } = require('../middlewares/auth');
 
-// router.get('/', checkAuthSession, function(req, res, next) {
 router.get('/', checkAuth, function(req, res, next) {
    models.Konstituen.findAll({include: [{model: models.Kecamatan}, {model: models.Kelurahan}]}).then(konstituens => {
       // console.log(konstituens)
