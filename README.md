@@ -18,3 +18,5 @@
 ## agar chai dapat menggunakan plugins chai http, harus di use dulu : chai.use(chaiHttp);
 ## untuk melakukan request chai-http diharuskan menggunakan file app.js dengan cara require : const app = require('../app');
 
+# Saat testing mocha chai, jangan jalankan npm start atau nodemon app.js
+
