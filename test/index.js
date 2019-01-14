@@ -49,7 +49,7 @@ describe('CRUD Konstituen', () => {
             expect(res.body.message).to.equal('Read Data Konstituen')
             expect(res.body).to.have.property('data')
             expect(res.body.data).to.be('array')
-      })
+         })
    })
    it('Should CREATE Data Konstituen', () => {
       chai.request(app)
@@ -69,6 +69,37 @@ describe('CRUD Konstituen', () => {
             expect(res.body.message).to.equal('Konstituen Created');
             expect(res.body).to.have.property('data');
             expect(res.body.data.konstituen).to.have.property('nama').to.equal('John Wick');
+         })
+   })
+   it('Should UPDATE Data Konstituen', () => {
+      chai.request(app)
+         .put('/konstituens/30')
+         .set('token', token)
+         .send({nama: 'Keanu Reeves', 
+                nik: 61122334455667788, 
+                hp: 08989012345678, 
+                alamat: 'Paret Semben', 
+                kecamatanID: 6, 
+                kelurahanID:26, 
+                tps: 10})
+         .end((err, res) => {
+            expect(res).to.have.status(201)
+            expect(res).to.be.json
+            expect(res.body).to.have.property('message');
+            expect(res.body.message).to.equal('"Konstituen with Id : " + 30 + "is Updated"');
+            expect(res.body).to.have.property('data');
+            expect(res.body.data.konstituen).to.have.property('nama').to.equal('Keanu Reeves');
+         })
+   })
+   it('Should DELETE Data Konstituen', () => {
+      chai.request(app)
+         .delete('/konstituens/33')
+         .set('token', token)
+         .end((err,res) => {
+            expect(res).to.have.status(200)
+            expect(res).to.be.json
+            expect(res.body).to.have.property('message')
+            expect(res.body.message).to.equal("Delete Konstituen with Id : " + 33)
          })
    })
 })
