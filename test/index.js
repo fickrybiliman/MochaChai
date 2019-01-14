@@ -5,21 +5,23 @@ const app = require('../app');
 
 chai.use(chaiHttp);
 
-var token = '';
+var token;
 
 describe('Users', () => {
-   it('Should be Login and Get Token', () => {
+   it('Should be Login and Get Token', (done) => {
       chai.request(app)
          .post('/users/login')
          .send({username: 'fickry', password: 'biliman'})
          .end((err, res) => {
-            expect(res).to.have.status(200)
-            expect(res).to.be.json
-            expect(res).to.have.property('message')
-            expect(res.body.message).to.equal('Success Login')
-            expect(res).to.have.property('data')
-            expect(res.body.data).to.have.property('data')
-            token = res.body.data.token
+            expect(res).to.have.status(200);
+            expect(res).to.be.json;
+            expect(res.body).to.have.property('message');
+            expect(res.body.message).to.equal('Success Login');
+            expect(res.body).to.have.property('data');
+            expect(res.body.data).to.have.property('token');
+            expect(res.body.data).to.have.property('token').with.lengthOf(356);
+            token = res.body.data.token;
+            done();
       })
    })
    it('Should give error when username and password wrong', () => {
@@ -27,27 +29,47 @@ describe('Users', () => {
          .post('/users/login')
          .send({username: 'fickry', password: 'bilimanXXX'})
          .end((err, res) => {
-            expect(res).to.have.status(403)
-            expect(res).to.be.json
-            expect(res).to.have.property('message')
+            expect(res).to.have.status(403);
+            expect(res).to.be.json;
+            expect(res.body).to.have.property('message')
             expect(res.body.message).to.equal('Invalid Login')
       })
    })
 })
 
 describe('CRUD Konstituen', () => {
-   it('Should get Data Konstituen', () => {
+   it('Should READ Data Konstituen', () => {
       chai.request(app)
          .get('/konstituens')
          .set('token', token)
          .end((err, res) => {
             expect(res).to.have.status(200)
             expect(res).to.be.json
-            expect(res).to.have.property('message')
+            expect(res.body).to.have.property('message')
             expect(res.body.message).to.equal('Read Data Konstituen')
-            expect(res).to.have.property('data')
+            expect(res.body).to.have.property('data')
             expect(res.body.data).to.be('array')
       })
+   })
+   it('Should CREATE Data Konstituen', () => {
+      chai.request(app)
+         .post('/konstituens')
+         .set('token', token)
+         .send({nama: 'John Wick', 
+                nik: 61122334455667788, 
+                hp: 08989012345678, 
+                alamat: 'Paret Semben', 
+                kecamatanID: 6, 
+                kelurahanID:26, 
+                tps: 10})
+         .end((err, res) => {
+            expect(res).to.have.status(200)
+            expect(res).to.be.json
+            expect(res.body).to.have.property('message');
+            expect(res.body.message).to.equal('Konstituen Created');
+            expect(res.body).to.have.property('data');
+            expect(res.body.data.konstituen).to.have.property('nama').to.equal('John Wick');
+         })
    })
 })
 
